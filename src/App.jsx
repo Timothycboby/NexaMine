@@ -5,6 +5,11 @@ import { StorageProvider } from './contexts/StorageContext'
 import AuthPage from './pages/AuthPage'
 import Dashboard from './pages/Dashboard'
 import UploadPage from './pages/UploadPage'
+import MyFiles from './components/MyFiles'
+import MainLayout from './components/MainLayout'
+import Analytics from './pages/Analytics'
+import Storage from './pages/Storage'
+import Shared from './pages/Shared'
 
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth()
@@ -23,7 +28,9 @@ const App = () => {
                 path="/dashboard" 
                 element={
                   <PrivateRoute>
-                    <Dashboard />
+                    <MainLayout>
+                      <Dashboard />
+                    </MainLayout>
                   </PrivateRoute>
                 } 
               />
@@ -31,8 +38,42 @@ const App = () => {
                 path="/upload" 
                 element={
                   <PrivateRoute>
-                    <UploadPage />
+                    <MainLayout>
+                      <UploadPage />
+                    </MainLayout>
                   </PrivateRoute>
+                } 
+              />
+              <Route 
+                path="/my-files" 
+                element={
+                  <MainLayout>
+                    <MyFiles />
+                  </MainLayout>
+                } 
+              />
+              <Route 
+                path="/analytics" 
+                element={
+                  <MainLayout>
+                    <Analytics />
+                  </MainLayout>
+                } 
+              />
+              <Route 
+                path="/storage" 
+                element={
+                  <MainLayout>
+                    <Storage />
+                  </MainLayout>
+                } 
+              />
+              <Route 
+                path="/shared" 
+                element={
+                  <MainLayout>
+                    <Shared />
+                  </MainLayout>
                 } 
               />
               <Route path="/" element={<Navigate to="/dashboard" replace />} />

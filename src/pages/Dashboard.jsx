@@ -1,10 +1,8 @@
 import { useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useTheme } from '../contexts/ThemeContext'
-import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
-import FileExplorer from '../components/FileExplorer'
 import StorageStats from '../components/StorageStats'
+import FileExplorer from '../components/FileExplorer'
 import { motion } from 'framer-motion'
 
 const Dashboard = () => {
@@ -35,29 +33,19 @@ const Dashboard = () => {
   }
 
   return (
-    <div className={`min-h-screen ${isDark ? 'dark' : ''}`}>
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-        <Sidebar />
-        
-        <div className="flex-1 z-50 flex flex-col overflow-hidden">
-          <Header />
-          
-          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
-            <div className="container mx-auto px-6 py-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="space-y-8"
-              >
-                <StorageStats />
-                <FileExplorer />
-              </motion.div>
-            </div>
-          </main>
-        </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-8 w-full max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-4 md:py-8"
+    >
+      <div className="w-full">
+        <StorageStats />
       </div>
-    </div>
+      <div className="w-full">
+        <FileExplorer />
+      </div>
+    </motion.div>
   )
 }
 
