@@ -1,21 +1,21 @@
 import { useEffect } from 'react'
-import { useAuth } from '../contexts/AuthContext'
+import { useUser } from '@clerk/clerk-react'
 import { useTheme } from '../contexts/ThemeContext'
 import StorageStats from '../components/StorageStats'
 import FileExplorer from '../components/FileExplorer'
 import { motion } from 'framer-motion'
 
 const Dashboard = () => {
-  const { user, isLoading } = useAuth()
+  const { user, isLoaded } = useUser()
   const { isDark } = useTheme()
 
   useEffect(() => {
-    if (!isLoading && !user) {
-      window.location.href = '/auth'
+    if (isLoaded && !user) {
+      window.location.href = '/sign-in'
     }
-  }, [user, isLoading])
+  }, [user, isLoaded])
 
-  if (isLoading) {
+  if (!isLoaded) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">

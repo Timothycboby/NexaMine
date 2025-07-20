@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from './contexts/ThemeContext'
-import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { StorageProvider } from './contexts/StorageContext'
 import AuthPage from './pages/AuthPage'
 import Dashboard from './pages/Dashboard'
@@ -10,77 +9,114 @@ import MainLayout from './components/MainLayout'
 import Analytics from './pages/Analytics'
 import Storage from './pages/Storage'
 import Shared from './pages/Shared'
-
-const PrivateRoute = ({ children }) => {
-  const { user } = useAuth()
-  return user ? children : <Navigate to="/auth" replace />
-}
+import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react"
 
 const App = () => {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <StorageProvider>
-          <div className="App">
-            <Routes>
-              <Route path="/auth" element={<AuthPage />} />
-              <Route 
-                path="/dashboard" 
-                element={
-                  <PrivateRoute>
+      <StorageProvider>
+        <div className="App">
+          <Routes>
+            {/* Public route for sign-in */}
+            <Route path="/sign-in" element={<AuthPage />} />
+            <Route path="/auth" element={<Navigate to="/sign-in" replace />} />
+
+            {/* Protected routes */}
+            <Route
+              path="/dashboard"
+              element={
+                <>
+                  <SignedIn>
                     <MainLayout>
                       <Dashboard />
                     </MainLayout>
-                  </PrivateRoute>
-                } 
-              />
-              <Route 
-                path="/upload" 
-                element={
-                  <PrivateRoute>
+                  </SignedIn>
+                  <SignedOut>
+                    <RedirectToSignIn />
+                  </SignedOut>
+                </>
+              }
+            />
+            <Route
+              path="/upload"
+              element={
+                <>
+                  <SignedIn>
                     <MainLayout>
                       <UploadPage />
                     </MainLayout>
-                  </PrivateRoute>
-                } 
-              />
-              <Route 
-                path="/my-files" 
-                element={
-                  <MainLayout>
-                    <MyFiles />
-                  </MainLayout>
-                } 
-              />
-              <Route 
-                path="/analytics" 
-                element={
-                  <MainLayout>
-                    <Analytics />
-                  </MainLayout>
-                } 
-              />
-              <Route 
-                path="/storage" 
-                element={
-                  <MainLayout>
-                    <Storage />
-                  </MainLayout>
-                } 
-              />
-              <Route 
-                path="/shared" 
-                element={
-                  <MainLayout>
-                    <Shared />
-                  </MainLayout>
-                } 
-              />
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
-          </div>
-        </StorageProvider>
-      </AuthProvider>
+                  </SignedIn>
+                  <SignedOut>
+                    <RedirectToSignIn />
+                  </SignedOut>
+                </>
+              }
+            />
+            <Route
+              path="/my-files"
+              element={
+                <>
+                  <SignedIn>
+                    <MainLayout>
+                      <MyFiles />
+                    </MainLayout>
+                  </SignedIn>
+                  <SignedOut>
+                    <RedirectToSignIn />
+                  </SignedOut>
+                </>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <>
+                  <SignedIn>
+                    <MainLayout>
+                      <Analytics />
+                    </MainLayout>
+                  </SignedIn>
+                  <SignedOut>
+                    <RedirectToSignIn />
+                  </SignedOut>
+                </>
+              }
+            />
+            <Route
+              path="/storage"
+              element={
+                <>
+                  <SignedIn>
+                    <MainLayout>
+                      <Storage />
+                    </MainLayout>
+                  </SignedIn>
+                  <SignedOut>
+                    <RedirectToSignIn />
+                  </SignedOut>
+                </>
+              }
+            />
+            <Route
+              path="/shared"
+              element={
+                <>
+                  <SignedIn>
+                    <MainLayout>
+                      <Shared />
+                    </MainLayout>
+                  </SignedIn>
+                  <SignedOut>
+                    <RedirectToSignIn />
+                  </SignedOut>
+                </>
+              }
+            />
+            {/* Redirect root to dashboard */}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </div>
+      </StorageProvider>
     </ThemeProvider>
   )
 }

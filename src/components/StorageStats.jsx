@@ -1,14 +1,17 @@
-import { useAuth } from '../contexts/AuthContext'
+import { useUser } from '@clerk/clerk-react'
 import { useStorage } from '../contexts/StorageContext'
 import { motion } from 'framer-motion'
 import { HardDrive, FileText, Image, Video, Music, Archive, TrendingUp, Zap } from 'lucide-react'
 
 const StorageStats = () => {
-  const { user } = useAuth()
+  const { user, isLoaded } = useUser()
   const { files, formatFileSize } = useStorage()
 
+  // Fallback storage limit if not set on user
+  const storageLimit = user?.publicMetadata?.storageLimit || 10 * 1024 * 1024 * 1024 // 10 GB default
+
   const totalStorageUsed = files.reduce((acc, file) => acc + file.size, 0)
-  const storagePercentage = (totalStorageUsed / user.storageLimit) * 100
+  const storagePercentage = (totalStorageUsed / storageLimit) * 100
 
   const getFileTypeStats = () => {
     const stats = {
@@ -47,6 +50,8 @@ const StorageStats = () => {
 
   const fileStats = getFileTypeStats()
 
+  if (!isLoaded) return null
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {/* Total Storage */}
@@ -82,7 +87,7 @@ const StorageStats = () => {
             <div className="flex justify-between text-sm">
               <span className="text-gray-600 dark:text-gray-400">Used</span>
               <span className="text-gray-900 dark:text-white font-semibold">
-                {formatFileSize(totalStorageUsed)} / {formatFileSize(user.storageLimit)}
+                {formatFileSize(totalStorageUsed)} / {formatFileSize(storageLimit)}
               </span>
             </div>
             <div className="relative">

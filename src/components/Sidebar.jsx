@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAuth } from '../contexts/AuthContext'
+import { useUser, useClerk } from '@clerk/clerk-react'
 import { useStorage } from '../contexts/StorageContext'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { 
@@ -23,7 +23,8 @@ import {
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
-  const { user, logout } = useAuth()
+  const { user } = useUser()
+  const { signOut } = useClerk()
   const navigate = useNavigate()
   const location = useLocation()
   const { currentPath, navigateToFolder } = useStorage()
@@ -92,7 +93,7 @@ const Sidebar = () => {
   ]
 
   const handleLogout = () => {
-    logout()
+    signOut()
   }
 
   // Responsive sidebar overlay for mobile
@@ -223,18 +224,18 @@ const Sidebar = () => {
             <div className="flex items-center space-x-3 mb-4">
               <div className="relative">
                 <img
-                  src={user?.avatar}
-                  alt={user?.name}
+                  src={user?.imageUrl}
+                  alt={user?.fullName}
                   className="w-12 h-12 rounded-2xl border-2 border-white/20 shadow-lg"
                 />
                 <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-success-500 rounded-full border-2 border-white"></div>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                  {user?.name}
+                  {user?.fullName}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                  {user?.email}
+                  {user?.primaryEmailAddress?.emailAddress}
                 </p>
               </div>
             </div>
@@ -248,9 +249,9 @@ const Sidebar = () => {
               <button
                 onClick={handleLogout}
                 className="w-full flex items-center space-x-3 px-4 py-2 rounded-xl text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300"
-              >
+                >
                 <LogOut className="w-4 h-4" />
-                <span className="text-sm">Sign Out</span>
+                <span className="text-sm">Logout</span>
               </button>
             </div>
           </div>
