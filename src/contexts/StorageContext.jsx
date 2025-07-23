@@ -86,7 +86,9 @@ export const StorageProvider = ({ children }) => {
         path: path,
         uploadedAt: new Date().toISOString(),
         icon: getFileIcon(file.type),
-        url: URL.createObjectURL(file)
+        url: URL.createObjectURL(file),
+        starred: false, // add starred property
+        trashed: false  // add trashed property
       }
       
       setFiles(prev => [...prev, newFile])
@@ -113,9 +115,24 @@ export const StorageProvider = ({ children }) => {
   }
 
   const deleteFile = (fileId) => {
-    setFiles(prev => prev.filter(file => file.id !== fileId))
+    setFiles(prev => prev.map(file =>
+      file.id === fileId ? { ...file, trashed: true } : file
+    ))
     setSelectedItems(prev => prev.filter(id => id !== fileId))
-    toast.success('File deleted successfully!')
+    toast.success('File moved to trash!')
+  }
+
+  const restoreFile = (fileId) => {
+    setFiles(prev => prev.map(file =>
+      file.id === fileId ? { ...file, trashed: false } : file
+    ))
+    toast.success('File restored!')
+  }
+
+  const toggleStarred = (fileId) => {
+    setFiles(prev => prev.map(file =>
+      file.id === fileId ? { ...file, starred: !file.starred } : file
+    ))
   }
 
   const deleteFolder = (folderId) => {
@@ -191,7 +208,9 @@ export const StorageProvider = ({ children }) => {
     navigateToFolder,
     getBreadcrumbs,
     formatFileSize,
-    getFileIcon
+    getFileIcon,
+    restoreFile, // expose restoreFile
+    toggleStarred // expose toggleStarred
   }
 
   return (

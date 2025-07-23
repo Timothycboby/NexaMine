@@ -11,7 +11,7 @@ import {
 import { useState } from 'react'
 
 const FileList = ({ items, selectedItems, onItemClick }) => {
-  const { formatFileSize, navigateToFolder, deleteFile, deleteFolder } = useStorage()
+  const { formatFileSize, navigateToFolder, deleteFile, deleteFolder, toggleStarred } = useStorage()
   const [contextMenu, setContextMenu] = useState({ show: false, item: null, x: 0, y: 0 })
 
   const handleContextMenu = (e, item) => {
@@ -51,6 +51,13 @@ const FileList = ({ items, selectedItems, onItemClick }) => {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+    }
+    setContextMenu({ show: false, item: null, x: 0, y: 0 })
+  }
+
+  const handleStar = (item) => {
+    if (!item.icon?.includes('📁')) {
+      toggleStarred(item.id)
     }
     setContextMenu({ show: false, item: null, x: 0, y: 0 })
   }
@@ -171,19 +178,14 @@ const FileList = ({ items, selectedItems, onItemClick }) => {
             </button>
           )}
           
-          <button className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-            <Edit3 className="w-4 h-4" />
-            <span>Rename</span>
+          <button className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => handleStar(contextMenu.item)}>
+            <Star className="w-4 h-4" />
+            <span>Star</span>
           </button>
           
           <button className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
             <Share2 className="w-4 h-4" />
             <span>Share</span>
-          </button>
-          
-          <button className="w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-            <Star className="w-4 h-4" />
-            <span>Star</span>
           </button>
           
           <div className="border-t border-gray-200 dark:border-gray-700 my-1" />

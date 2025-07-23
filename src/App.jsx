@@ -9,6 +9,8 @@ import MainLayout from './components/MainLayout'
 import Analytics from './pages/Analytics'
 import Storage from './pages/Storage'
 import Shared from './pages/Shared'
+import Starred from './pages/Starred';
+import Trash from './pages/Trash';
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react"
 
 const App = () => {
@@ -104,6 +106,36 @@ const App = () => {
                   <SignedIn>
                     <MainLayout>
                       <Shared />
+                    </MainLayout>
+                  </SignedIn>
+                  <SignedOut>
+                    <RedirectToSignIn />
+                  </SignedOut>
+                </>
+              }
+            />
+            <Route
+              path="/starred"
+              element={
+                <>
+                  <SignedIn>
+                    <MainLayout>
+                      <Starred />
+                    </MainLayout>
+                  </SignedIn>
+                  <SignedOut>
+                    <RedirectToSignIn />
+                  </SignedOut>
+                </>
+              }
+            />
+            <Route
+              path="/trash"
+              element={
+                <>
+                  <SignedIn>
+                    <MainLayout>
+                      <Trash />
                     </MainLayout>
                   </SignedIn>
                   <SignedOut>
